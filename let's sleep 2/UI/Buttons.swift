@@ -70,7 +70,7 @@ class Buttons {
         
         var body: some View {
             BaseButton(
-                icon: Icons.sleepEvent(type: .goToSleep),
+                icon: Icons.sleepEvent(type: .wentToSleep),
                 text: buttonsCopy.goToSleep.rawValue,
                 foregroundColor: _Color.blue,
                 action: action
@@ -121,7 +121,7 @@ class Buttons {
         
         var body: some View {
             BaseButton(
-                icon: Icons.sleepEvent(type: .wakeUp),
+                icon: Icons.sleepEvent(type: .wokeUp),
                 text: buttonsCopy.wakeUp.rawValue,
                 foregroundColor: _Color.yellow,
                 action: action

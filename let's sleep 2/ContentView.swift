@@ -39,34 +39,92 @@ struct ContentView: View {
         }
     }
     
-    func deleteSleepEntries(at offsets: IndexSet) {
-        for index in offsets {
-            let sleepEntry = sleepEntries[index]
-            store.delete(sleepEntry)
+//    func deleteSleepEntries(at offsets: IndexSet) {
+//        for el in offsets {
+////            print(el)
+//        }
+//    }
+    
+//    func deleteSleepEntries(at offsets: IndexSet) {
+//        for index in offsets {
+//            print(index)
+//            let sleepEntry = sleepEntries[index]
+//            store.delete(sleepEntry)
+//        }
+//    }
+//
+    
+    
+    func groupedEntries() -> [String: [SleepEntry]] {
+        let res = Dictionary(grouping: sleepEntries.sorted(by: { $0.datetime > $1.datetime })) { entry in
+            String(Int(entry.datetime.timeIntervalSince1970/86400))
         }
+        return res
     }
     
     var body: some View {
         VStack {
             List {
-                ForEach(sleepEntries, id: \.self) { sleepEntry in
-                    HStack {
-                        Text(formattedDate(sleepEntry.datetime))
-                        Text(formattedTime(sleepEntry.datetime))
-                        Spacer()
-                        Text(sleepEntry.type.rawValue)
+                ForEach(groupedEntries().sorted(by: { $0.key < $1.key }), id: \.key) { date, entries in
+                    let title = formattedDate(entries.first?.datetime ?? Date())
+                    let sortedEntries = entries.sorted(by: {$0.datetime < $1.datetime})
+                    
+                    Section(header: Text(title)) {
+                        ForEach(sortedEntries, id: \.self) { sleepEntry in
+                            HStack {
+                                Icons.sleepEvent(type: sleepEntry.type)
+                                Text(sleepEntry.type.rawValue)
+                                Spacer()
+                                Text(formattedTime(sleepEntry.datetime))
+                            }
+                        }
+                        .onDelete(perform: { offsets in
+                            for offset in offsets {
+                                store.delete(sortedEntries[offset])
+                            }
+                        })
                     }
                 }
-                .onDelete(perform: deleteSleepEntries)
             }
         
-            if !timePickerVisible {
-                Buttons.AddFirstEntry() {
-                    toggleDateTimePicker()
+            VStack {
+                if sleepEntries.isEmpty {
+                    if !timePickerVisible {
+                        Buttons.AddFirstEntry() {
+                            toggleDateTimePicker()
+                        }
+                    }
+                } else {
+                    if !timePickerVisible {
+                        if let type = sleepEntries.last?.type {
+                            switch type {
+                            case .wentToSleep:
+                                HStack {
+                                    Buttons.Plus() {
+                                        toggleDateTimePicker()
+                                    }
+                                    Buttons.WakeUp() {
+                                        let sleepEntry = SleepEntry(datetime: Date(), type: .wokeUp)
+                                        store.insert(sleepEntry)
+                                    }
+                                }
+                            case .wokeUp:
+                                HStack {
+                                    Buttons.Plus() {
+                                        toggleDateTimePicker()
+                                    }
+                                    Buttons.GoToSleep() {
+                                        let sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
+                                        store.insert(sleepEntry)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                .padding(.bottom, 40)
-                .transition(.move(edge: .bottom))
             }
+            .padding(.bottom, 40)
+            .transition(.move(edge: .bottom))
             if timePickerVisible {
                 VStack {
                     HStack {
@@ -80,9 +138,9 @@ struct ContentView: View {
                         }
                     }
                     WheelDatePickerView(selectedDate: $currentDatePickerDateTime)
-                    Picker("Flavor", selection: $currentSleepManualEntryType) {
-                        ForEach(SleepManualEntryType.allCases) { flavor in
-                            Text(flavor.rawValue.capitalized)
+                    Picker("", selection: $currentSleepManualEntryType) {
+                        ForEach(SleepManualEntryType.allCases) { type in
+                            Text(type.rawValue.capitalized)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -92,10 +150,33 @@ struct ContentView: View {
             }
         }
         .ignoresSafeArea(edges: .bottom)
+        .padding(.top)
     }
 }
 
 #Preview {
-    ContentView()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: SleepEntry.self, configurations: config)
+    
+    let context = container.mainContext
+    context.insert(
+        SleepEntry(datetime: Date(timeIntervalSince1970: 1738224074), type: .wokeUp)
+    )
+    context.insert(
+        SleepEntry(datetime: Date(timeIntervalSince1970: 1738324074), type: .wokeUp)
+    )
+    context.insert(
+        SleepEntry(datetime: Date(timeIntervalSince1970: 1738424074), type: .wokeUp)
+    )
+    context.insert(
+        SleepEntry(datetime: Date(timeIntervalSince1970: 1738434074), type: .wokeUp)
+    )
+    context.insert(
+        SleepEntry(datetime: Date(timeIntervalSince1970: 1738444074), type: .wokeUp)
+    )
+
+    
+    return ContentView()
+        .modelContainer(container)
         .preferredColorScheme(.dark)
 }

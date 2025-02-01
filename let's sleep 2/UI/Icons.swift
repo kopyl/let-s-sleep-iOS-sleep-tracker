@@ -13,15 +13,15 @@ struct Icons {
                 .font(.system(size: 16))
         }
     
-    static func sleepEvent(type: SleepEventType) -> some View {
+    static func sleepEvent(type: SleepManualEntryType) -> some View {
         switch type {
-        case .goToSleep:
+        case .wentToSleep:
             return AnyView(
                 Image(systemName: IconNames.bed.rawValue)
                     .foregroundColor(_Color.blue)
                         .font(.system(size: 13))
             )
-        case .wakeUp:
+        case .wokeUp:
             return AnyView(
                 Image(systemName: IconNames.sun.rawValue)
                     .foregroundColor(_Color.yellow)
