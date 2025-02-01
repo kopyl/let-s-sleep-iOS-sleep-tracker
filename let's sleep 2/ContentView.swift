@@ -39,22 +39,6 @@ struct ContentView: View {
         }
     }
     
-//    func deleteSleepEntries(at offsets: IndexSet) {
-//        for el in offsets {
-////            print(el)
-//        }
-//    }
-    
-//    func deleteSleepEntries(at offsets: IndexSet) {
-//        for index in offsets {
-//            print(index)
-//            let sleepEntry = sleepEntries[index]
-//            store.delete(sleepEntry)
-//        }
-//    }
-//
-    
-    
     func groupedEntries() -> [String: [SleepEntry]] {
         let res = Dictionary(grouping: sleepEntries.sorted(by: { $0.datetime > $1.datetime })) { entry in
             String(Int(entry.datetime.timeIntervalSince1970/86400))
