@@ -153,7 +153,6 @@ struct ContentView: View {
                         }
                     }
                     WheelDatePickerView(selectedDate: $currentDatePickerDateTime)
-                        .clipped()
                     Picker("", selection: $currentSleepManualEntryType) {
                         ForEach(SleepManualEntryType.allCases) { type in
                             Text(type.rawValue.capitalized)
@@ -161,6 +160,7 @@ struct ContentView: View {
                     }
                     .pickerStyle(.segmented)
                 }
+                .clipped()
                 .padding(.bottom, 40)
                 .transition(.move(edge: .bottom))
             }
