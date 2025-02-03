@@ -26,17 +26,21 @@ struct WheelDatePickerView: View {
 struct ContentView: View {
     @State var currentDatePickerDateTime = Date()
     @State var currentSleepManualEntryType: SleepManualEntryType = .wentToSleep
+    @State var currentSelectedSleepEntry: SleepEntry?
     
     @State private var timePickerVisible = false
     @Environment(\.modelContext) private var store
     @Query private var sleepEntries: [SleepEntry]
     
     func toggleDateTimePicker() {
-        withAnimation(.linear(duration: 0.2)) {
+        withAnimation(.linear(duration: 1)) {
             timePickerVisible.toggle()
-            currentDatePickerDateTime = Date()
-            currentSleepManualEntryType = .wentToSleep
         }
+    }
+    
+    func resetDateTimePicker() {
+        currentDatePickerDateTime = Date()
+        currentSleepManualEntryType = .wentToSleep
     }
     
     func groupedEntries() -> [String: [SleepEntry]] {
@@ -61,6 +65,13 @@ struct ContentView: View {
                                 Spacer()
                                 Text(formattedTime(sleepEntry.datetime))
                             }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                currentDatePickerDateTime = sleepEntry.datetime
+                                currentSleepManualEntryType = sleepEntry.type
+                                currentSelectedSleepEntry = sleepEntry
+                                toggleDateTimePicker()
+                            }
                         }
                         .onDelete(perform: { offsets in
                             for offset in offsets {
@@ -75,6 +86,7 @@ struct ContentView: View {
                 if sleepEntries.isEmpty {
                     if !timePickerVisible {
                         Buttons.AddFirstEntry() {
+                            resetDateTimePicker()
                             toggleDateTimePicker()
                         }
                     }
@@ -85,6 +97,7 @@ struct ContentView: View {
                             case .wentToSleep:
                                 HStack {
                                     Buttons.Plus() {
+                                        resetDateTimePicker()
                                         toggleDateTimePicker()
                                     }
                                     Buttons.WakeUp() {
@@ -95,6 +108,7 @@ struct ContentView: View {
                             case .wokeUp:
                                 HStack {
                                     Buttons.Plus() {
+                                        resetDateTimePicker()
                                         toggleDateTimePicker()
                                     }
                                     Buttons.GoToSleep() {
@@ -114,11 +128,28 @@ struct ContentView: View {
                     HStack {
                         Buttons.Cancel() {
                             toggleDateTimePicker()
+                            
                         }
-                        Buttons.AddFirstEntry(text: "Add") {
-                            let sleepEntry = SleepEntry(datetime: currentDatePickerDateTime, type: currentSleepManualEntryType)
-                            store.insert(sleepEntry)
-                            toggleDateTimePicker()
+                        if currentSelectedSleepEntry != nil {
+                            Buttons.AddFirstEntry(text: "Done") {
+                                currentSelectedSleepEntry?.datetime = currentDatePickerDateTime
+                                currentSelectedSleepEntry?.type = currentSleepManualEntryType
+                                do {
+                                    try store.save()
+                                }
+                                catch let error {
+                                    print(error.localizedDescription)
+                                }
+                                toggleDateTimePicker()
+                                currentSelectedSleepEntry = nil
+                            }
+                        }
+                        else {
+                            Buttons.AddFirstEntry(text: "Add") {
+                                let sleepEntry = SleepEntry(datetime: currentDatePickerDateTime, type: currentSleepManualEntryType)
+                                store.insert(sleepEntry)
+                                toggleDateTimePicker()
+                            }
                         }
                     }
                     WheelDatePickerView(selectedDate: $currentDatePickerDateTime)
@@ -129,7 +160,7 @@ struct ContentView: View {
                     }
                     .pickerStyle(.segmented)
                 }
-                .padding(.bottom, 40)
+//                .padding(.bottom, 40)
                 .transition(.move(edge: .bottom))
             }
         }
