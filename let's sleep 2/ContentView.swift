@@ -33,7 +33,7 @@ struct ContentView: View {
     @Query private var sleepEntries: [SleepEntry]
     
     func toggleDateTimePicker() {
-        withAnimation(.linear(duration: 1)) {
+        withAnimation(.easeInOut(duration: 0.20)) {
             timePickerVisible.toggle()
         }
     }
