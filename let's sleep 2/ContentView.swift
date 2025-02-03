@@ -160,7 +160,7 @@ struct ContentView: View {
                     }
                     .pickerStyle(.segmented)
                 }
-//                .padding(.bottom, 40)
+                .padding(.bottom, 40)
                 .transition(.move(edge: .bottom))
             }
         }
