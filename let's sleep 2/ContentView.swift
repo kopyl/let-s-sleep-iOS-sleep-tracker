@@ -78,29 +78,27 @@ struct ContentView: View {
                     Buttons.AddFirstEntry() {
                         picker.toggle()
                     }
-                } else {
-                    if !picker.isVisible {
-                        if let type = sleepEntries.last?.type {
-                            switch type {
-                            case .wentToSleep:
-                                HStack {
-                                    Buttons.Plus() {
-                                        picker.toggle()
-                                    }
-                                    Buttons.WakeUp() {
-                                        let sleepEntry = SleepEntry(type: .wokeUp)
-                                        store.insert(sleepEntry)
-                                    }
+                } else if !picker.isVisible {
+                    if let type = sleepEntries.last?.type {
+                        switch type {
+                        case .wentToSleep:
+                            HStack {
+                                Buttons.Plus() {
+                                    picker.toggle()
                                 }
-                            case .wokeUp:
-                                HStack {
-                                    Buttons.Plus() {
-                                        picker.toggle()
-                                    }
-                                    Buttons.GoToSleep() {
-                                        let sleepEntry = SleepEntry(type: .wentToSleep)
-                                        store.insert(sleepEntry)
-                                    }
+                                Buttons.WakeUp() {
+                                    let sleepEntry = SleepEntry(type: .wokeUp)
+                                    store.insert(sleepEntry)
+                                }
+                            }
+                        case .wokeUp:
+                            HStack {
+                                Buttons.Plus() {
+                                    picker.toggle()
+                                }
+                                Buttons.GoToSleep() {
+                                    let sleepEntry = SleepEntry(type: .wentToSleep)
+                                    store.insert(sleepEntry)
                                 }
                             }
                         }
