@@ -134,7 +134,7 @@ struct ContentView: View {
                             
                         }
                         if currentSelectedSleepEntry != nil {
-                            Buttons.AddFirstEntry(text: "Done") {
+                            Buttons.Confirm() {
                                 currentSelectedSleepEntry?.datetime = currentDatePickerDateTime
                                 currentSelectedSleepEntry?.type = currentSleepManualEntryType
                                 do {

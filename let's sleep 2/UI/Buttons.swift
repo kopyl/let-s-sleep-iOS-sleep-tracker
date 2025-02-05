@@ -80,7 +80,7 @@ class Buttons {
     
     struct Confirm: View {
         let action: () -> Void
-        let text: String = "Confirm"
+        let text: String = "Done"
         
         init(action: @escaping () -> Void) {
             self.action = action
