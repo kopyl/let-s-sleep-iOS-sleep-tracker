@@ -47,7 +47,7 @@ class PickerStates: ObservableObject {
 }
 
 struct ContentView: View {
-    @StateObject var pickerStates = PickerStates()
+    @StateObject var picker = PickerStates()
     @Environment(\.modelContext) private var store
     @Query private var sleepEntries: [SleepEntry]
     
@@ -67,7 +67,7 @@ struct ContentView: View {
                     
                     Section(header: Text(title)) {
                         ForEach(sortedEntries) {
-                            SleepEntryView(sleepEntry: $0, pickerStates: pickerStates)
+                            SleepEntryView(sleepEntry: $0, picker: picker)
                         }
                     }
                 }
@@ -75,19 +75,19 @@ struct ContentView: View {
         
             VStack {
                 if sleepEntries.isEmpty {
-                    if !pickerStates.isVisible {
+                    if !picker.isVisible {
                         Buttons.AddFirstEntry() {
-                            pickerStates.toggle()
+                            picker.toggle()
                         }
                     }
                 } else {
-                    if !pickerStates.isVisible {
+                    if !picker.isVisible {
                         if let type = sleepEntries.last?.type {
                             switch type {
                             case .wentToSleep:
                                 HStack {
                                     Buttons.Plus() {
-                                        pickerStates.toggle()
+                                        picker.toggle()
                                     }
                                     Buttons.WakeUp() {
                                         let sleepEntry = SleepEntry(type: .wokeUp)
@@ -97,7 +97,7 @@ struct ContentView: View {
                             case .wokeUp:
                                 HStack {
                                     Buttons.Plus() {
-                                        pickerStates.toggle()
+                                        picker.toggle()
                                     }
                                     Buttons.GoToSleep() {
                                         let sleepEntry = SleepEntry(type: .wentToSleep)
@@ -111,36 +111,36 @@ struct ContentView: View {
             }
             .padding(.bottom, 40)
             .transition(.move(edge: .bottom))
-            if pickerStates.isVisible {
+            if picker.isVisible {
                 VStack {
                     HStack {
                         Buttons.Cancel() {
-                            pickerStates.toggle()
+                            picker.toggle()
                         }
                         
-                        if pickerStates.sleepEntry.isJustCreated {
+                        if picker.sleepEntry.isJustCreated {
                             Buttons.AddFirstEntry(text: "Add") {
-                                store.insert(pickerStates.sleepEntry)
-                                pickerStates.toggle()
+                                store.insert(picker.sleepEntry)
+                                picker.toggle()
                             }
                         }
                         
                         else {
                             Buttons.Confirm() {
-                                pickerStates.sleepEntry.datetime = pickerStates.tempDatetime
+                                picker.sleepEntry.datetime = picker.tempDatetime
                                 do {
                                     try store.save()
                                 }
                                 catch let error {
                                     print(error.localizedDescription)
                                 }
-                                pickerStates.toggle()
+                                picker.toggle()
                             }
                         }
                     }
-                    WheelDatePickerView(selectedDate: $pickerStates.tempDatetime)
+                    WheelDatePickerView(selectedDate: $picker.tempDatetime)
                     
-                    Picker("", selection: $pickerStates.sleepEntry.type) {
+                    Picker("", selection: $picker.sleepEntry.type) {
                         ForEach(SleepManualEntryType.allCases) { type in
                             Text(type.rawValue.capitalized)
                         }

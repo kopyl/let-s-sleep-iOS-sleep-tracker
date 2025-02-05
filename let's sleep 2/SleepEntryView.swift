@@ -3,7 +3,7 @@ import SwiftUI
 struct SleepEntryView: View {
     @Bindable var sleepEntry: SleepEntry
     @Environment(\.modelContext) private var store
-    @ObservedObject var pickerStates: PickerStates
+    @ObservedObject var picker: PickerStates
 
     var body: some View {
         HStack {
@@ -14,9 +14,9 @@ struct SleepEntryView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
-            pickerStates.sleepEntry = sleepEntry
-            pickerStates.sleepEntry.isJustCreated = false
-            pickerStates.toggle()
+            picker.sleepEntry = sleepEntry
+            picker.sleepEntry.isJustCreated = false
+            picker.toggle()
         }
         .swipeActions(edge: .trailing) {
             Button("", systemImage: "trash") {
