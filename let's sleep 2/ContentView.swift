@@ -25,7 +25,7 @@ struct WheelDatePickerView: View {
 
 class PickerStates: ObservableObject {
     @Published var isVisible = false
-    @Published var sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep) {
+    @Published var sleepEntry = SleepEntry() {
         didSet {
             tempDatetime = sleepEntry.datetime
         }
@@ -33,7 +33,7 @@ class PickerStates: ObservableObject {
     @Published var tempDatetime = Date()
 
     func reset() {
-        sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
+        sleepEntry = SleepEntry()
     }
 
     func toggle() {
@@ -90,7 +90,7 @@ struct ContentView: View {
                                         pickerStates.toggle()
                                     }
                                     Buttons.WakeUp() {
-                                        let sleepEntry = SleepEntry(datetime: Date(), type: .wokeUp)
+                                        let sleepEntry = SleepEntry(type: .wokeUp)
                                         store.insert(sleepEntry)
                                     }
                                 }
@@ -100,7 +100,7 @@ struct ContentView: View {
                                         pickerStates.toggle()
                                     }
                                     Buttons.GoToSleep() {
-                                        let sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
+                                        let sleepEntry = SleepEntry(type: .wentToSleep)
                                         store.insert(sleepEntry)
                                     }
                                 }

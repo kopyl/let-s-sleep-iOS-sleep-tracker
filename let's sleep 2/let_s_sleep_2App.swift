@@ -12,6 +12,16 @@ class SleepEntry {
         self.datetime = datetime
         self.type = type
     }
+    
+    init() {
+        self.datetime = Date()
+        self.type = .wentToSleep
+    }
+    
+    init(type: SleepManualEntryType) {
+        self.datetime = Date()
+        self.type = type
+    }
 }
 
 @main
