@@ -25,14 +25,14 @@ struct WheelDatePickerView: View {
 
 class PickerStates: ObservableObject {
     @Published var isVisible = false
+    
+    var tempEntry = SleepEntry()
     @Published var sleepEntry = SleepEntry() {
         didSet {
-            tempDatetime = sleepEntry.datetime
-            tempType = sleepEntry.type
+            tempEntry.datetime = sleepEntry.datetime
+            tempEntry.type = sleepEntry.type
         }
     }
-    @Published var tempDatetime = Date()
-    @Published var tempType = SleepManualEntryType.wentToSleep
 
     func reset() {
         sleepEntry = SleepEntry()
@@ -112,8 +112,8 @@ struct ContentView: View {
                         
                         if picker.sleepEntry.isJustCreated {
                             Buttons.AddFirstEntry(text: "Add") {
-                                picker.sleepEntry.datetime = picker.tempDatetime
-                                picker.sleepEntry.type = picker.tempType
+                                picker.sleepEntry.datetime = picker.tempEntry.datetime
+                                picker.sleepEntry.type = picker.tempEntry.type
                                 store.insert(picker.sleepEntry)
                                 picker.toggle()
                             }
@@ -121,8 +121,8 @@ struct ContentView: View {
                         
                         else {
                             Buttons.Confirm() {
-                                picker.sleepEntry.datetime = picker.tempDatetime
-                                picker.sleepEntry.type = picker.tempType
+                                picker.sleepEntry.datetime = picker.tempEntry.datetime
+                                picker.sleepEntry.type = picker.tempEntry.type
                                 do {
                                     try store.save()
                                 }
@@ -133,9 +133,9 @@ struct ContentView: View {
                             }
                         }
                     }
-                    WheelDatePickerView(selectedDate: $picker.tempDatetime)
+                    WheelDatePickerView(selectedDate: $picker.tempEntry.datetime)
                     
-                    Picker("", selection: $picker.tempType) {
+                    Picker("", selection: $picker.tempEntry.type) {
                         ForEach(SleepManualEntryType.allCases) { type in
                             Text(type.rawValue.capitalized)
                         }
@@ -157,21 +157,21 @@ struct ContentView: View {
     let container = try! ModelContainer(for: SleepEntry.self, configurations: config)
     
     let context = container.mainContext
-    context.insert(
-        SleepEntry(datetime: Date(timeIntervalSince1970: 1738224074), type: .wokeUp)
-    )
-    context.insert(
-        SleepEntry(datetime: Date(timeIntervalSince1970: 1738324074), type: .wokeUp)
-    )
-    context.insert(
-        SleepEntry(datetime: Date(timeIntervalSince1970: 1738424074), type: .wokeUp)
-    )
-    context.insert(
-        SleepEntry(datetime: Date(timeIntervalSince1970: 1738434074), type: .wokeUp)
-    )
-    context.insert(
-        SleepEntry(datetime: Date(timeIntervalSince1970: 1738444074), type: .wokeUp)
-    )
+//    context.insert(
+//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738224074), type: .wokeUp)
+//    )
+//    context.insert(
+//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738324074), type: .wokeUp)
+//    )
+//    context.insert(
+//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738424074), type: .wokeUp)
+//    )
+//    context.insert(
+//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738434074), type: .wokeUp)
+//    )
+//    context.insert(
+//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738444074), type: .wokeUp)
+//    )
 
     return ContentView()
         .modelContainer(container)
