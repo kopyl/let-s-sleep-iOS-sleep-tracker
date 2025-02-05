@@ -26,21 +26,9 @@ enum buttonsCopy: String {
     case cancel = "Cancel"
 }
 
-enum SleepEventType {
-    case wakeUp
-    case goToSleep
-}
-
 enum SleepStatus {
     case awake
     case asleep
-}
-
-enum SleepEntryType: String {
-    case wentToSleep = "Went to sleep"
-    case wokeUp = "Woke up"
-    case sleptFor = "Slept for"
-    case beenAwakeFor = "Been awake for"
 }
 
 enum SleepManualEntryType: String, CaseIterable, Identifiable, Codable {
