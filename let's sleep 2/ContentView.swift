@@ -23,30 +23,32 @@ struct WheelDatePickerView: View {
     }
 }
 
-struct ContentView: View {
-    @State var currentDatePickerDateTime = Date()
-    @State var currentSleepManualEntryType: SleepManualEntryType = .wentToSleep
-    @State var currentSelectedSleepEntry: SleepEntry?
-    
-    @State private var timePickerVisible = false
-    @Environment(\.modelContext) private var store
-    @Query private var sleepEntries: [SleepEntry]
-    
-    func toggleDateTimePicker() {
+class PickerStates: ObservableObject {
+    @Published var isVisible = false
+    @Published var datetime = Date()
+    @Published var sleepManualEntryType: SleepManualEntryType = .wentToSleep
+    @Published var sleepEntry: SleepEntry?
+
+    func reset() {
+        datetime = Date()
+        sleepManualEntryType = .wentToSleep
+    }
+
+    func toggle() {
         withAnimation(.easeInOut(duration: 0.20)) {
-            resetDateTimePicker()
-            timePickerVisible.toggle()
-            if timePickerVisible {
-                return
+            isVisible.toggle()
+            if isVisible == false {
+                reset()
+                sleepEntry = nil
             }
-            currentSelectedSleepEntry = nil
         }
     }
-    
-    func resetDateTimePicker() {
-        currentDatePickerDateTime = Date()
-        currentSleepManualEntryType = .wentToSleep
-    }
+}
+
+struct ContentView: View {
+        @StateObject var pickerStates = PickerStates()
+    @Environment(\.modelContext) private var store
+    @Query private var sleepEntries: [SleepEntry]
     
     func groupedEntries() -> [String: [SleepEntry]] {
         let res = Dictionary(grouping: sleepEntries.sorted(by: { $0.datetime > $1.datetime })) { entry in
@@ -63,48 +65,28 @@ struct ContentView: View {
                     let sortedEntries = entries.sorted(by: {$0.datetime < $1.datetime})
                     
                     Section(header: Text(title)) {
-                        ForEach(sortedEntries) { sleepEntry in
-                            HStack {
-                                Icons.sleepEvent(type: sleepEntry.type)
-                                Text(sleepEntry.type.rawValue)
-                                Spacer()
-                                Text(formattedTime(sleepEntry.datetime))
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                currentDatePickerDateTime = sleepEntry.datetime
-                                currentSleepManualEntryType = sleepEntry.type
-                                currentSelectedSleepEntry = sleepEntry
-                                toggleDateTimePicker()
-                            }
-                            .onLongPressGesture {
-                                try? store.delete(model: SleepEntry.self)
-                            }
+                        ForEach(sortedEntries) {
+                            SleepEntryView(sleepEntry: $0, pickerStates: pickerStates)
                         }
-                        .onDelete(perform: { offsets in
-                            for offset in offsets {
-                                store.delete(sortedEntries[offset])
-                            }
-                        })
                     }
                 }
             }
         
             VStack {
                 if sleepEntries.isEmpty {
-                    if !timePickerVisible {
+                    if !pickerStates.isVisible {
                         Buttons.AddFirstEntry() {
-                            toggleDateTimePicker()
+                            pickerStates.toggle()
                         }
                     }
                 } else {
-                    if !timePickerVisible {
+                    if !pickerStates.isVisible {
                         if let type = sleepEntries.last?.type {
                             switch type {
                             case .wentToSleep:
                                 HStack {
                                     Buttons.Plus() {
-                                        toggleDateTimePicker()
+                                        pickerStates.toggle()
                                     }
                                     Buttons.WakeUp() {
                                         let sleepEntry = SleepEntry(datetime: Date(), type: .wokeUp)
@@ -114,7 +96,7 @@ struct ContentView: View {
                             case .wokeUp:
                                 HStack {
                                     Buttons.Plus() {
-                                        toggleDateTimePicker()
+                                        pickerStates.toggle()
                                     }
                                     Buttons.GoToSleep() {
                                         let sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
@@ -128,35 +110,35 @@ struct ContentView: View {
             }
             .padding(.bottom, 40)
             .transition(.move(edge: .bottom))
-            if timePickerVisible {
+            if pickerStates.isVisible {
                 VStack {
                     HStack {
                         Buttons.Cancel() {
-                            toggleDateTimePicker()
+                            pickerStates.toggle()
                         }
-                        if currentSelectedSleepEntry != nil {
+                        if pickerStates.sleepEntry != nil {
                             Buttons.Confirm() {
-                                currentSelectedSleepEntry?.datetime = currentDatePickerDateTime
-                                currentSelectedSleepEntry?.type = currentSleepManualEntryType
+                                pickerStates.sleepEntry?.datetime = pickerStates.datetime
+                                pickerStates.sleepEntry?.type = pickerStates.sleepManualEntryType
                                 do {
                                     try store.save()
                                 }
                                 catch let error {
                                     print(error.localizedDescription)
                                 }
-                                toggleDateTimePicker()
+                                pickerStates.toggle()
                             }
                         }
                         else {
                             Buttons.AddFirstEntry(text: "Add") {
-                                let sleepEntry = SleepEntry(datetime: currentDatePickerDateTime, type: currentSleepManualEntryType)
+                                let sleepEntry = SleepEntry(datetime: pickerStates.datetime, type: pickerStates.sleepManualEntryType)
                                 store.insert(sleepEntry)
-                                toggleDateTimePicker()
+                                pickerStates.toggle()
                             }
                         }
                     }
-                    WheelDatePickerView(selectedDate: $currentDatePickerDateTime)
-                    Picker("", selection: $currentSleepManualEntryType) {
+                    WheelDatePickerView(selectedDate: $pickerStates.datetime)
+                    Picker("", selection: $pickerStates.sleepManualEntryType) {
                         ForEach(SleepManualEntryType.allCases) { type in
                             Text(type.rawValue.capitalized)
                         }
