@@ -28,9 +28,11 @@ class PickerStates: ObservableObject {
     @Published var sleepEntry = SleepEntry() {
         didSet {
             tempDatetime = sleepEntry.datetime
+            tempType = sleepEntry.type
         }
     }
     @Published var tempDatetime = Date()
+    @Published var tempType = SleepManualEntryType.wentToSleep
 
     func reset() {
         sleepEntry = SleepEntry()
@@ -118,6 +120,7 @@ struct ContentView: View {
                         else {
                             Buttons.Confirm() {
                                 picker.sleepEntry.datetime = picker.tempDatetime
+                                picker.sleepEntry.type = picker.tempType
                                 do {
                                     try store.save()
                                 }
@@ -130,7 +133,7 @@ struct ContentView: View {
                     }
                     WheelDatePickerView(selectedDate: $picker.tempDatetime)
                     
-                    Picker("", selection: $picker.sleepEntry.type) {
+                    Picker("", selection: $picker.tempType) {
                         ForEach(SleepManualEntryType.allCases) { type in
                             Text(type.rawValue.capitalized)
                         }
