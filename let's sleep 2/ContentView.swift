@@ -95,13 +95,11 @@ struct ContentView: View {
                     switch sleepEntries.last!.type {
                     case .wentToSleep:
                         Buttons.WakeUp() {
-                            let sleepEntry = SleepEntry(type: .wokeUp)
-                            store.insert(sleepEntry)
+                            store.saveWakeUp()
                         }
                     case .wokeUp:
                         Buttons.GoToSleep() {
-                            let sleepEntry = SleepEntry(type: .wentToSleep)
-                            store.insert(sleepEntry)
+                            store.saveGoToSleep()
                         }
                     }
                     }

@@ -21,6 +21,18 @@ class SleepEntry {
     }
 }
 
+extension ModelContext {
+    func saveWakeUp() {
+        let sleepEntry = SleepEntry(type: .wokeUp)
+        self.insert(sleepEntry)
+    }
+    
+    func saveGoToSleep() {
+        let sleepEntry = SleepEntry(type: .wentToSleep)
+        self.insert(sleepEntry)
+    }
+}
+
 @main
 struct let_s_sleep_2App: App {
     var body: some Scene {
