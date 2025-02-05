@@ -59,17 +59,16 @@ struct ContentView: View {
     @Environment(\.modelContext) private var store
     @Query private var sleepEntries: [SleepEntry]
     
-    func groupedEntries() -> [Int: [SleepEntry]] {
-        let res = Dictionary(grouping: sleepEntries.sorted(by: { $0.datetime > $1.datetime })) { entry in
-            Int(entry.datetime.timeIntervalSince1970/86400)
+    func groupedEntriesByDay() -> [Date: [SleepEntry]] {
+        return Dictionary(grouping: sleepEntries) { entry in
+            Calendar.current.startOfDay(for: entry.datetime)
         }
-        return res
     }
     
     var body: some View {
         VStack {
             List {
-                ForEach(groupedEntries().sorted(by: { $0.key < $1.key }), id: \.key) { date, entries in
+                ForEach(groupedEntriesByDay().sorted(by: { $0.key < $1.key }), id: \.key) { date, entries in
                     let title = formattedDate(entries.first?.datetime ?? Date())
                     let sortedEntries = entries.sorted(by: {$0.datetime < $1.datetime})
                     
