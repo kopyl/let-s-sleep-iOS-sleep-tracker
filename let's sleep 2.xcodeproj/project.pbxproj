@@ -16,7 +16,6 @@
 		4840892F2D4E3FDC00195E8F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4840892E2D4E3FDC00195E8F /* Constants.swift */; };
 		484089312D4E40B400195E8F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484089302D4E40B400195E8F /* Color.swift */; };
 		484089332D4E439F00195E8F /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484089322D4E439F00195E8F /* UI.swift */; };
-		484089352D4E446100195E8F /* SleepData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484089342D4E446100195E8F /* SleepData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,7 +29,6 @@
 		4840892E2D4E3FDC00195E8F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		484089302D4E40B400195E8F /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		484089322D4E439F00195E8F /* UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
-		484089342D4E446100195E8F /* SleepData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +68,6 @@
 				4840891B2D4E3F0600195E8F /* ContentView.swift */,
 				484089272D4E3F7300195E8F /* Assets.xcassets */,
 				4840891F2D4E3F0800195E8F /* Preview Content */,
-				484089342D4E446100195E8F /* SleepData.swift */,
 			);
 			path = "let's sleep 2";
 			sourceTree = "<group>";
@@ -168,7 +165,6 @@
 				4840892C2D4E3FC000195E8F /* Buttons.swift in Sources */,
 				4840891C2D4E3F0600195E8F /* ContentView.swift in Sources */,
 				4840892D2D4E3FC000195E8F /* Icons.swift in Sources */,
-				484089352D4E446100195E8F /* SleepData.swift in Sources */,
 				4840891A2D4E3F0600195E8F /* let_s_sleep_2App.swift in Sources */,
 				484089312D4E40B400195E8F /* Color.swift in Sources */,
 			);
