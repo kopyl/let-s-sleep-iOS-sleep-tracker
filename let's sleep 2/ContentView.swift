@@ -131,7 +131,7 @@ struct ContentView: View {
                     HStack {
                         Buttons.Cancel() {
                             toggleDateTimePicker()
-                            
+                            currentSelectedSleepEntry = nil
                         }
                         if currentSelectedSleepEntry != nil {
                             Buttons.Confirm() {
@@ -152,6 +152,7 @@ struct ContentView: View {
                                 let sleepEntry = SleepEntry(datetime: currentDatePickerDateTime, type: currentSleepManualEntryType)
                                 store.insert(sleepEntry)
                                 toggleDateTimePicker()
+                                currentSelectedSleepEntry = nil
                             }
                         }
                     }
