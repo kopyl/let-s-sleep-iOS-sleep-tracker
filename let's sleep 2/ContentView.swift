@@ -37,6 +37,12 @@ class PickerStates: ObservableObject {
     func reset() {
         sleepEntry = SleepEntry()
     }
+    
+    func saveChanges(to store: ModelContext) {
+        sleepEntry.datetime = tempEntry.datetime
+        sleepEntry.type = tempEntry.type
+        store.insert(sleepEntry)
+    }
 
     func toggle() {
         withAnimation(.easeInOut(duration: 0.20)) {
@@ -112,23 +118,14 @@ struct ContentView: View {
                         
                         if picker.sleepEntry.isJustCreated {
                             Buttons.AddFirstEntry(text: "Add") {
-                                picker.sleepEntry.datetime = picker.tempEntry.datetime
-                                picker.sleepEntry.type = picker.tempEntry.type
-                                store.insert(picker.sleepEntry)
+                                picker.saveChanges(to: store)
                                 picker.toggle()
                             }
                         }
                         
                         else {
                             Buttons.Confirm() {
-                                picker.sleepEntry.datetime = picker.tempEntry.datetime
-                                picker.sleepEntry.type = picker.tempEntry.type
-                                do {
-                                    try store.save()
-                                }
-                                catch let error {
-                                    print(error.localizedDescription)
-                                }
+                                picker.saveChanges(to: store)
                                 picker.toggle()
                             }
                         }
