@@ -4,14 +4,11 @@ import SwiftData
 @Model
 class SleepEntry {
     @Attribute(.unique) var id: UUID = UUID()
-    var datetime: Date
-    var type: SleepManualEntryType
+    var datetime = Date()
+    var type = SleepManualEntryType.wentToSleep
     var isJustCreated = true
     
-    init() {
-        self.datetime = Date()
-        self.type = .wentToSleep
-    }
+    init() {}
     
     init(type: SleepManualEntryType) {
         self.datetime = Date()
