@@ -7,11 +7,6 @@ class SleepEntry {
     var datetime: Date
     var type: SleepManualEntryType
     var isJustCreated = true
-
-    init(datetime: Date, type: SleepManualEntryType) {
-        self.datetime = datetime
-        self.type = type
-    }
     
     init() {
         self.datetime = Date()
@@ -20,6 +15,11 @@ class SleepEntry {
     
     init(type: SleepManualEntryType) {
         self.datetime = Date()
+        self.type = type
+    }
+
+    init(datetime: Date, type: SleepManualEntryType) {
+        self.datetime = datetime
         self.type = type
     }
 }
