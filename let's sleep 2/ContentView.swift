@@ -46,7 +46,7 @@ class PickerStates: ObservableObject {
 }
 
 struct ContentView: View {
-        @StateObject var pickerStates = PickerStates()
+    @StateObject var pickerStates = PickerStates()
     @Environment(\.modelContext) private var store
     @Query private var sleepEntries: [SleepEntry]
     
