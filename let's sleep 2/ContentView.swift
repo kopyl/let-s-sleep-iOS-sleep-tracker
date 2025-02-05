@@ -69,7 +69,7 @@ struct ContentView: View {
         VStack {
             List {
                 ForEach(groupedEntriesByDay().sorted(by: { $0.key < $1.key }), id: \.key) { date, entries in
-                    let title = formattedDate(entries.first?.datetime ?? Date())
+                    let title = formattedDate(date)
                     let sortedEntries = entries.sorted(by: {$0.datetime < $1.datetime})
                     
                     Section(header: Text(title)) {
