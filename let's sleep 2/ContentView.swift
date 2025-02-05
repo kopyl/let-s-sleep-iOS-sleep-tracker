@@ -105,7 +105,6 @@ struct ContentView: View {
                 }
             }
             .padding(.bottom, 40)
-            .transition(.move(edge: .bottom))
             if picker.isVisible {
                 VStack {
                     HStack {
