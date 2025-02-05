@@ -25,7 +25,12 @@ struct WheelDatePickerView: View {
 
 class PickerStates: ObservableObject {
     @Published var isVisible = false
-    @Published var sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
+    @Published var sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep) {
+        didSet {
+            tempDatetime = sleepEntry.datetime
+        }
+    }
+    @Published var tempDatetime = Date()
 
     func reset() {
         sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
@@ -122,6 +127,7 @@ struct ContentView: View {
                         
                         else {
                             Buttons.Confirm() {
+                                pickerStates.sleepEntry.datetime = pickerStates.tempDatetime
                                 do {
                                     try store.save()
                                 }
@@ -132,7 +138,7 @@ struct ContentView: View {
                             }
                         }
                     }
-                    WheelDatePickerView(selectedDate: $pickerStates.sleepEntry.datetime)
+                    WheelDatePickerView(selectedDate: $pickerStates.tempDatetime)
                     
                     Picker("", selection: $pickerStates.sleepEntry.type) {
                         ForEach(SleepManualEntryType.allCases) { type in
