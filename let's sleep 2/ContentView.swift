@@ -63,7 +63,7 @@ struct ContentView: View {
                     let sortedEntries = entries.sorted(by: {$0.datetime < $1.datetime})
                     
                     Section(header: Text(title)) {
-                        ForEach(sortedEntries, id: \.self) { sleepEntry in
+                        ForEach(sortedEntries) { sleepEntry in
                             HStack {
                                 Icons.sleepEvent(type: sleepEntry.type)
                                 Text(sleepEntry.type.rawValue)
