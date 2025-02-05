@@ -25,7 +25,7 @@ struct WheelDatePickerView: View {
 
 class PickerStates: ObservableObject {
     @Published var isVisible = false
-    @Published var sleepEntry: SleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
+    @Published var sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
 
     func reset() {
         sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
