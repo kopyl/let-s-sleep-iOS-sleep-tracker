@@ -59,9 +59,9 @@ struct ContentView: View {
     @Environment(\.modelContext) private var store
     @Query private var sleepEntries: [SleepEntry]
     
-    func groupedEntries() -> [String: [SleepEntry]] {
+    func groupedEntries() -> [Int: [SleepEntry]] {
         let res = Dictionary(grouping: sleepEntries.sorted(by: { $0.datetime > $1.datetime })) { entry in
-            String(Int(entry.datetime.timeIntervalSince1970/86400))
+            Int(entry.datetime.timeIntervalSince1970/86400)
         }
         return res
     }
