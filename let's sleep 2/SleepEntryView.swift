@@ -21,6 +21,7 @@ struct SleepEntryView: View {
         .swipeActions(edge: .trailing) {
             Button("", systemImage: "trash") {
                 store.delete(sleepEntry)
+                picker.isVisible = false
             }
             .tint(.red)
         }
