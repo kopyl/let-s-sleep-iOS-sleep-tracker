@@ -194,7 +194,6 @@ struct ContentView: View {
         SleepEntry(datetime: Date(timeIntervalSince1970: 1738444074), type: .wokeUp)
     )
 
-    
     return ContentView()
         .modelContainer(container)
         .preferredColorScheme(.dark)
