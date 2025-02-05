@@ -34,7 +34,12 @@ struct ContentView: View {
     
     func toggleDateTimePicker() {
         withAnimation(.easeInOut(duration: 0.20)) {
+            resetDateTimePicker()
             timePickerVisible.toggle()
+            if timePickerVisible {
+                return
+            }
+            currentSelectedSleepEntry = nil
         }
     }
     
@@ -89,7 +94,6 @@ struct ContentView: View {
                 if sleepEntries.isEmpty {
                     if !timePickerVisible {
                         Buttons.AddFirstEntry() {
-                            resetDateTimePicker()
                             toggleDateTimePicker()
                         }
                     }
@@ -100,7 +104,6 @@ struct ContentView: View {
                             case .wentToSleep:
                                 HStack {
                                     Buttons.Plus() {
-                                        resetDateTimePicker()
                                         toggleDateTimePicker()
                                     }
                                     Buttons.WakeUp() {
@@ -111,7 +114,6 @@ struct ContentView: View {
                             case .wokeUp:
                                 HStack {
                                     Buttons.Plus() {
-                                        resetDateTimePicker()
                                         toggleDateTimePicker()
                                     }
                                     Buttons.GoToSleep() {
@@ -131,7 +133,6 @@ struct ContentView: View {
                     HStack {
                         Buttons.Cancel() {
                             toggleDateTimePicker()
-                            currentSelectedSleepEntry = nil
                         }
                         if currentSelectedSleepEntry != nil {
                             Buttons.Confirm() {
@@ -144,7 +145,6 @@ struct ContentView: View {
                                     print(error.localizedDescription)
                                 }
                                 toggleDateTimePicker()
-                                currentSelectedSleepEntry = nil
                             }
                         }
                         else {
@@ -152,7 +152,6 @@ struct ContentView: View {
                                 let sleepEntry = SleepEntry(datetime: currentDatePickerDateTime, type: currentSleepManualEntryType)
                                 store.insert(sleepEntry)
                                 toggleDateTimePicker()
-                                currentSelectedSleepEntry = nil
                             }
                         }
                     }
