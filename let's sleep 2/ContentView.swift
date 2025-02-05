@@ -74,11 +74,9 @@ struct ContentView: View {
             }
         
             VStack {
-                if sleepEntries.isEmpty {
-                    if !picker.isVisible {
-                        Buttons.AddFirstEntry() {
-                            picker.toggle()
-                        }
+                if sleepEntries.isEmpty && !picker.isVisible {
+                    Buttons.AddFirstEntry() {
+                        picker.toggle()
                     }
                 } else {
                     if !picker.isVisible {
