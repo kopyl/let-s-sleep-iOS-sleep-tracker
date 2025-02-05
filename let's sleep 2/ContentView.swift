@@ -72,6 +72,9 @@ struct ContentView: View {
                                 currentSelectedSleepEntry = sleepEntry
                                 toggleDateTimePicker()
                             }
+                            .onLongPressGesture {
+                                try? store.delete(model: SleepEntry.self)
+                            }
                         }
                         .onDelete(perform: { offsets in
                             for offset in offsets {
