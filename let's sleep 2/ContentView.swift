@@ -25,13 +25,10 @@ struct WheelDatePickerView: View {
 
 class PickerStates: ObservableObject {
     @Published var isVisible = false
-    @Published var datetime = Date()
-    @Published var sleepManualEntryType: SleepManualEntryType = .wentToSleep
-    @Published var sleepEntry: SleepEntry?
+    @Published var sleepEntry: SleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
 
     func reset() {
-        datetime = Date()
-        sleepManualEntryType = .wentToSleep
+        sleepEntry = SleepEntry(datetime: Date(), type: .wentToSleep)
     }
 
     func toggle() {
@@ -39,7 +36,6 @@ class PickerStates: ObservableObject {
             isVisible.toggle()
             if isVisible == false {
                 reset()
-                sleepEntry = nil
             }
         }
     }
@@ -116,10 +112,16 @@ struct ContentView: View {
                         Buttons.Cancel() {
                             pickerStates.toggle()
                         }
-                        if pickerStates.sleepEntry != nil {
+                        
+                        if pickerStates.sleepEntry.isJustCreated {
+                            Buttons.AddFirstEntry(text: "Add") {
+                                store.insert(pickerStates.sleepEntry)
+                                pickerStates.toggle()
+                            }
+                        }
+                        
+                        else {
                             Buttons.Confirm() {
-                                pickerStates.sleepEntry?.datetime = pickerStates.datetime
-                                pickerStates.sleepEntry?.type = pickerStates.sleepManualEntryType
                                 do {
                                     try store.save()
                                 }
@@ -129,16 +131,10 @@ struct ContentView: View {
                                 pickerStates.toggle()
                             }
                         }
-                        else {
-                            Buttons.AddFirstEntry(text: "Add") {
-                                let sleepEntry = SleepEntry(datetime: pickerStates.datetime, type: pickerStates.sleepManualEntryType)
-                                store.insert(sleepEntry)
-                                pickerStates.toggle()
-                            }
-                        }
                     }
-                    WheelDatePickerView(selectedDate: $pickerStates.datetime)
-                    Picker("", selection: $pickerStates.sleepManualEntryType) {
+                    WheelDatePickerView(selectedDate: $pickerStates.sleepEntry.datetime)
+                    
+                    Picker("", selection: $pickerStates.sleepEntry.type) {
                         ForEach(SleepManualEntryType.allCases) { type in
                             Text(type.rawValue.capitalized)
                         }

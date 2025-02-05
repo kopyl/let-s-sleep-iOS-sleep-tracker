@@ -6,6 +6,7 @@ class SleepEntry {
     @Attribute(.unique) var id: UUID = UUID()
     var datetime: Date
     var type: SleepManualEntryType
+    var isJustCreated = true
 
     init(datetime: Date, type: SleepManualEntryType) {
         self.datetime = datetime

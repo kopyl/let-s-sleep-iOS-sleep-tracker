@@ -14,9 +14,8 @@ struct SleepEntryView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
-            pickerStates.datetime = sleepEntry.datetime
-            pickerStates.sleepManualEntryType = sleepEntry.type
             pickerStates.sleepEntry = sleepEntry
+            pickerStates.sleepEntry.isJustCreated = false
             pickerStates.toggle()
         }
         .swipeActions(edge: .trailing) {
