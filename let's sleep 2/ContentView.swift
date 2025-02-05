@@ -112,6 +112,8 @@ struct ContentView: View {
                         
                         if picker.sleepEntry.isJustCreated {
                             Buttons.AddFirstEntry(text: "Add") {
+                                picker.sleepEntry.datetime = picker.tempDatetime
+                                picker.sleepEntry.type = picker.tempType
                                 store.insert(picker.sleepEntry)
                                 picker.toggle()
                             }
