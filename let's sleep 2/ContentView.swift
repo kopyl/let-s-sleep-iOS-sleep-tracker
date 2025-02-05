@@ -150,23 +150,6 @@ struct ContentView: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: SleepEntry.self, configurations: config)
-    
-    let context = container.mainContext
-//    context.insert(
-//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738224074), type: .wokeUp)
-//    )
-//    context.insert(
-//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738324074), type: .wokeUp)
-//    )
-//    context.insert(
-//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738424074), type: .wokeUp)
-//    )
-//    context.insert(
-//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738434074), type: .wokeUp)
-//    )
-//    context.insert(
-//        SleepEntry(datetime: Date(timeIntervalSince1970: 1738444074), type: .wokeUp)
-//    )
 
     return ContentView()
         .modelContainer(container)
